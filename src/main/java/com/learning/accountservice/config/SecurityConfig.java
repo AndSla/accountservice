@@ -11,20 +11,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    PasswordEncoder encoder;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("admin")
-                .password(passwordEncoder.encode("admin"))
+                .password(encoder.encode("admin"))
                 .roles("ADMIN")
                 .and()
                 .withUser("user")
-                .password(passwordEncoder.encode("user"))
+                .password(encoder.encode("user"))
                 .roles("USER")
                 .and()
-                .passwordEncoder(passwordEncoder);
+                .passwordEncoder(encoder);
     }
 
     @Override

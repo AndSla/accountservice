@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -24,7 +23,7 @@ public class Controller {
     User0Repository user0Repository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    PasswordEncoder encoder;
 
     @PostMapping("api/auth/signup")
     public User0 signUp(@RequestBody User0 user0) {
@@ -33,7 +32,7 @@ public class Controller {
             newUser0.setName(user0.getName());
             newUser0.setLastname(user0.getLastname());
             newUser0.setEmail(user0.getEmail());
-            newUser0.setPassword(passwordEncoder.encode(user0.getPassword()));
+            newUser0.setPassword(encoder.encode(user0.getPassword()));
             if (user0Repository.existsByEmail(user0.getEmail())) {
                 throw new UserExistsException();
             } else {
