@@ -6,9 +6,13 @@ import com.learning.accountservice.model.User0;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class Controller {
@@ -35,6 +39,12 @@ public class Controller {
         } else {
             throw new BadUserException();
         }
+    }
+
+    @GetMapping("api/empl/payment")
+    public User0 getPaymentInfo() {
+        Optional<User0> user0Optional = user0Repository.findById(3L);
+        return user0Optional.orElseGet(User0::new);
     }
 
 }
