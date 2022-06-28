@@ -1,22 +1,30 @@
 package com.learning.accountservice.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("admin").password("admin").roles("ADMIN")
+                .withUser("admin")
+                .password(passwordEncoder.encode("admin"))
+                .roles("ADMIN")
                 .and()
-                .withUser("user").password("user").roles("USER")
+                .withUser("user")
+                .password(passwordEncoder.encode("user"))
+                .roles("USER")
                 .and()
-                .passwordEncoder(NoOpPasswordEncoder.getInstance());
+                .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -25,9 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/api/auth/signup").hasRole("ADMIN")
                 .mvcMatchers("/api/empl/payment").hasAnyRole("ADMIN", "USER")
                 .and()
-                .httpBasic()
+                .csrf().disable().headers().frameOptions().disable()
                 .and()
-                .csrf().disable();
+                .httpBasic();
     }
 
 }
