@@ -33,7 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/api/auth/signup").hasRole("ADMIN")
                 .mvcMatchers("/api/empl/payment").hasAnyRole("ADMIN", "USER")
                 .and()
-                .csrf().disable().headers().frameOptions().disable()
+                .csrf().disable()
+                .headers().frameOptions().disable()    //for H2 console to work
                 .and()
                 .httpBasic();
     }
