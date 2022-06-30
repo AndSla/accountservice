@@ -2,10 +2,13 @@ package com.learning.accountservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class User0 implements UserDetails {
@@ -32,6 +35,10 @@ public class User0 implements UserDetails {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean enabled;
+
+    @Enumerated(EnumType.STRING)                    // table column will be of enum type
+    @ElementCollection(fetch = FetchType.EAGER)     // automatically creates one-to-many mapping
+    private List<Role> roles;
 
     public Long getId() {
         return id;
@@ -80,10 +87,17 @@ public class User0 implements UserDetails {
         this.password = password;
     }
 
+    public void grantRole(Role role) {
+        if (roles == null) roles = new ArrayList<>();
+        roles.add(role);
+    }
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.toString())));
+        return authorities;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

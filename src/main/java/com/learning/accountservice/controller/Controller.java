@@ -2,6 +2,7 @@ package com.learning.accountservice.controller;
 
 import com.learning.accountservice.exception.BadUserException;
 import com.learning.accountservice.exception.UserExistsException;
+import com.learning.accountservice.model.Role;
 import com.learning.accountservice.model.User0;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.Utils;
@@ -33,6 +34,7 @@ public class Controller {
             newUser0.setLastname(user0.getLastname());
             newUser0.setEmail(user0.getEmail());
             newUser0.setPassword(encoder.encode(user0.getPassword()));
+            newUser0.grantRole(Role.USER);
             if (user0Repository.existsByEmail(user0.getEmail())) {
                 throw new UserExistsException();
             } else {
