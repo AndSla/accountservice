@@ -38,7 +38,7 @@ public class Controller {
             newUser0.setUsername(user0.getEmail());
             newUser0.setPassword(encoder.encode(user0.getPassword()));
             newUser0.grantRole(Role.ROLE_USER);
-            if (user0Repository.existsByEmail(user0.getEmail())) {
+            if (user0Repository.existsByEmail(user0.getEmail().toLowerCase())) {
                 throw new UserExistsException();
             } else {
                 user0Repository.save(newUser0);
