@@ -26,7 +26,6 @@ public class User0 implements UserDetails {
     private String password;
 
     @JsonIgnore
-    @Transient
     private String username;
 
     @JsonIgnore

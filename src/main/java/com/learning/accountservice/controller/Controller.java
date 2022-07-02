@@ -7,6 +7,8 @@ import com.learning.accountservice.model.User0;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +37,7 @@ public class Controller {
             newUser0.setEmail(user0.getEmail());
             newUser0.setUsername(user0.getEmail());
             newUser0.setPassword(encoder.encode(user0.getPassword()));
-            newUser0.grantRole(Role.USER);
+            newUser0.grantRole(Role.ROLE_USER);
             if (user0Repository.existsByEmail(user0.getEmail())) {
                 throw new UserExistsException();
             } else {
@@ -48,9 +50,13 @@ public class Controller {
     }
 
     @GetMapping("api/empl/payment")
-    public User0 getPaymentInfo() {
-        Optional<User0> user0Optional = user0Repository.findById(3L);
-        return user0Optional.orElseGet(User0::new);
+    public User0 getPaymentInfo(Authentication auth) {
+        Optional<User0> user0Optional = user0Repository.findByUsername(auth.getName());
+        if (user0Optional.isPresent()) {
+            return user0Optional.get();
+        } else {
+            throw new UsernameNotFoundException(auth.getName());
+        }
     }
 
 }
