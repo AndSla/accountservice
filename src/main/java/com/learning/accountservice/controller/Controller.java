@@ -33,6 +33,7 @@ public class Controller {
             newUser0.setName(user0.getName());
             newUser0.setLastname(user0.getLastname());
             newUser0.setEmail(user0.getEmail());
+            newUser0.setUsername(user0.getEmail());
             newUser0.setPassword(encoder.encode(user0.getPassword()));
             newUser0.grantRole(Role.USER);
             if (user0Repository.existsByEmail(user0.getEmail())) {

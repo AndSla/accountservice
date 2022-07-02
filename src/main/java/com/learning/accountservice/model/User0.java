@@ -1,5 +1,6 @@
 package com.learning.accountservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,18 +25,23 @@ public class User0 implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
+    @Transient
+    private String username;
+
+    @JsonIgnore
     private boolean accountNonExpired;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private boolean accountNonLocked;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private boolean credentialsNonExpired;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private boolean enabled;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)                    // table column will be of enum type
     @ElementCollection(fetch = FetchType.EAGER)     // automatically creates one-to-many mapping
     private List<Role> roles;
@@ -92,7 +98,7 @@ public class User0 implements UserDetails {
         roles.add(role);
     }
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -100,10 +106,13 @@ public class User0 implements UserDetails {
         return authorities;
     }
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return name;
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -141,4 +150,5 @@ public class User0 implements UserDetails {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
 }
