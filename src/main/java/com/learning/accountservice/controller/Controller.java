@@ -2,6 +2,8 @@ package com.learning.accountservice.controller;
 
 import com.learning.accountservice.exception.BadUserException;
 import com.learning.accountservice.exception.UserExistsException;
+import com.learning.accountservice.model.ChangePass;
+import com.learning.accountservice.model.ChangePassResult;
 import com.learning.accountservice.model.Role;
 import com.learning.accountservice.model.User0;
 import com.learning.accountservice.repository.User0Repository;
@@ -58,5 +60,16 @@ public class Controller {
             throw new UsernameNotFoundException(auth.getName());
         }
     }
+
+    @PostMapping("api/auth/changepass")
+    public ChangePassResult changePassword(@RequestBody ChangePass changePass) {
+        String newPassword = changePass.getNewPassword();
+        System.out.println(newPassword);
+        ChangePassResult changePassResult = new ChangePassResult();
+        changePassResult.setEmail("someone@nowhere.com");
+        changePassResult.setStatus("Success");
+        return changePassResult;
+    }
+
 
 }
