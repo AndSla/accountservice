@@ -62,13 +62,29 @@ public class Controller {
     }
 
     @PostMapping("api/auth/changepass")
-    public ChangePassResult changePassword(@RequestBody ChangePass changePass) {
+    public ChangePassResult changePassword(
+            @RequestBody ChangePass changePass,
+            Authentication auth) {
         String newPassword = changePass.getNewPassword();
-        System.out.println(newPassword);
         ChangePassResult changePassResult = new ChangePassResult();
-        changePassResult.setEmail("someone@nowhere.com");
-        changePassResult.setStatus("Success");
+
+        if (auth != null) {
+            Optional<User0> user0Optional = user0Repository.findByUsername(auth.getName());
+
+            if (user0Optional.isPresent()) {
+                User0 user0 = user0Optional.get();
+                user0.setPassword(encoder.encode(newPassword));
+                user0Repository.save(user0);
+                changePassResult.setEmail(user0.getEmail());
+                changePassResult.setStatus("The password has been updated successfully");
+            } else {
+                throw new UsernameNotFoundException(auth.getName());
+            }
+
+        }
+
         return changePassResult;
+
     }
 
 
