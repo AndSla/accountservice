@@ -3,7 +3,7 @@ package com.learning.accountservice.controller;
 import com.learning.accountservice.exception.BadUserException;
 import com.learning.accountservice.exception.UserExistsException;
 import com.learning.accountservice.model.ChangePass;
-import com.learning.accountservice.model.ChangePassResult;
+import com.learning.accountservice.model.ChangePassResponse;
 import com.learning.accountservice.model.Role;
 import com.learning.accountservice.model.User0;
 import com.learning.accountservice.repository.User0Repository;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -31,7 +32,7 @@ public class Controller {
     PasswordEncoder encoder;
 
     @PostMapping("api/auth/signup")
-    public User0 signUp(@RequestBody User0 user0) {
+    public User0 signUp(@Valid @RequestBody User0 user0) {
         if (utils.isUserValid(user0)) {
             User0 newUser0 = new User0();
             newUser0.setName(user0.getName());
@@ -62,11 +63,11 @@ public class Controller {
     }
 
     @PostMapping("api/auth/changepass")
-    public ChangePassResult changePassword(
+    public ChangePassResponse changePassword(
             @RequestBody ChangePass changePass,
             Authentication auth) {
         String newPassword = changePass.getNewPassword();
-        ChangePassResult changePassResult = new ChangePassResult();
+        ChangePassResponse changePassResponse = new ChangePassResponse();
 
         if (auth != null) {
             Optional<User0> user0Optional = user0Repository.findByUsername(auth.getName());
@@ -75,15 +76,15 @@ public class Controller {
                 User0 user0 = user0Optional.get();
                 user0.setPassword(encoder.encode(newPassword));
                 user0Repository.save(user0);
-                changePassResult.setEmail(user0.getEmail());
-                changePassResult.setStatus("The password has been updated successfully");
+                changePassResponse.setEmail(user0.getEmail());
+                changePassResponse.setStatus("The password has been updated successfully");
             } else {
                 throw new UsernameNotFoundException(auth.getName());
             }
 
         }
 
-        return changePassResult;
+        return changePassResponse;
 
     }
 

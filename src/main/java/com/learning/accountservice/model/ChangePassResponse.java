@@ -1,11 +1,11 @@
 package com.learning.accountservice.model;
 
-public class ChangePassResult {
+public class ChangePassResponse {
 
     private String email;
     private String status;
 
-    public ChangePassResult() {
+    public ChangePassResponse() {
     }
 
     public String getEmail() {
