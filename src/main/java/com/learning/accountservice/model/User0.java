@@ -35,7 +35,7 @@ public class User0 implements UserDetails {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
-    @Size(min = 12, message = "The password length must be at least 12 chars!")
+    @Size(min = 12, message = "Password length must be 12 chars minimum!")
     private String password;
 
     @JsonIgnore

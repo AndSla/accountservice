@@ -10,6 +10,7 @@ import com.learning.accountservice.model.User0;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +36,7 @@ public class Controller {
     @PostMapping("api/auth/signup")
     public User0 signUp(@Valid @RequestBody User0 user0) {
 
-        if (utils.isOnBreachedPasswordsList(user0.getPassword())){
+        if (utils.isOnBreachedPasswordsList(user0.getPassword())) {
             throw new BreachedPasswordException();
         }
 
@@ -82,7 +83,7 @@ public class Controller {
                     throw new SamePasswordException();
                 }
 
-                if (utils.isOnBreachedPasswordsList(newPassword)){
+                if (utils.isOnBreachedPasswordsList(newPassword)) {
                     throw new BreachedPasswordException();
                 }
 
@@ -94,6 +95,8 @@ public class Controller {
                 throw new UsernameNotFoundException(auth.getName());
             }
 
+        } else {
+            throw new AuthenticationServiceException("Authentication Error");
         }
 
         return changePassResponse;
