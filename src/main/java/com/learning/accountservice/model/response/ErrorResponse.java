@@ -1,4 +1,4 @@
-package com.learning.accountservice.model;
+package com.learning.accountservice.model.response;
 
 import java.time.LocalDateTime;
 

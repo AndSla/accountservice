@@ -4,7 +4,7 @@ import com.learning.accountservice.exception.BreachedPasswordException;
 import com.learning.accountservice.exception.SamePasswordException;
 import com.learning.accountservice.exception.UserExistsException;
 import com.learning.accountservice.model.ChangePass;
-import com.learning.accountservice.model.ChangePassResponse;
+import com.learning.accountservice.model.response.ChangePassResponse;
 import com.learning.accountservice.model.Role;
 import com.learning.accountservice.model.User0;
 import com.learning.accountservice.repository.User0Repository;
@@ -102,6 +102,7 @@ public class Controller {
         return changePassResponse;
 
     }
+
 
 
 }
