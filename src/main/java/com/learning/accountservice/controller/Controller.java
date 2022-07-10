@@ -3,10 +3,10 @@ package com.learning.accountservice.controller;
 import com.learning.accountservice.exception.BreachedPasswordException;
 import com.learning.accountservice.exception.SamePasswordException;
 import com.learning.accountservice.exception.UserExistsException;
-import com.learning.accountservice.model.ChangePass;
+import com.learning.accountservice.model.*;
 import com.learning.accountservice.model.response.ChangePassResponse;
-import com.learning.accountservice.model.Role;
-import com.learning.accountservice.model.User0;
+import com.learning.accountservice.model.response.ChangeSalaryResponse;
+import com.learning.accountservice.model.response.UpdatePayrollsResponse;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,10 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -103,6 +101,18 @@ public class Controller {
 
     }
 
+    @PostMapping("api/acct/payments")
+    public UpdatePayrollsResponse updatePayrollsResponse(@RequestBody List<Salary> listOfSalaries) {
+        UpdatePayrollsResponse updatePayrollsResponse = new UpdatePayrollsResponse();
+        updatePayrollsResponse.setStatus("Added successfully!");
+        return updatePayrollsResponse;
+    }
 
+    @PutMapping("api/acct/payments")
+    public ChangeSalaryResponse changeSalaryResponse(@RequestBody Salary salary) {
+        ChangeSalaryResponse changeSalaryResponse = new ChangeSalaryResponse();
+        changeSalaryResponse.setStatus("Updated successfully!");
+        return changeSalaryResponse;
+    }
 
 }
