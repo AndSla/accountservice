@@ -64,7 +64,7 @@ public class Controller {
 
     @PostMapping("api/auth/changepass")
     public ChangePassResponse changePassword(
-            @RequestBody ChangePass changePass,
+            @Valid @RequestBody ChangePass changePass,
             Authentication auth) {
         String newPassword = changePass.getNewPassword();
         ChangePassResponse changePassResponse = new ChangePassResponse();
