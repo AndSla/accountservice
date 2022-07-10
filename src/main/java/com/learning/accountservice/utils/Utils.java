@@ -1,21 +1,24 @@
 package com.learning.accountservice.utils;
 
-import com.learning.accountservice.model.User0;
+import com.learning.accountservice.config.BreachedPasswords;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.List;
 
 public class Utils {
 
-    public boolean isUserValid(User0 user0) {
-        if (user0.getName() == null ||
-                user0.getLastname() == null ||
-                user0.getEmail() == null ||
-                user0.getPassword() == null) {
-            return false;
+    BreachedPasswords breachedPasswords = new BreachedPasswords();
 
-        }
-        return user0.getName().matches("[a-zA-Z]+") &&
-                user0.getLastname().matches("[a-zA-Z]+") &&
-                user0.getEmail().matches("\\w+@acme\\.com") &&
-                user0.getPassword().matches("\\S+");
+    public boolean isNewPasswordSameAsOldPassword(String newPass, String oldPass) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        return encoder.matches(newPass, oldPass);
+    }
+
+    public boolean isOnBreachedPasswordsList(String newPass) {
+        List<String> breachedPasswordsList = breachedPasswords.getListOfBreachedPasswords();
+
+        return breachedPasswordsList.contains(newPass);
     }
 
 }

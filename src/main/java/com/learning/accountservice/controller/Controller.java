@@ -1,6 +1,7 @@
 package com.learning.accountservice.controller;
 
-import com.learning.accountservice.exception.BadUserException;
+import com.learning.accountservice.exception.BreachedPasswordException;
+import com.learning.accountservice.exception.SamePasswordException;
 import com.learning.accountservice.exception.UserExistsException;
 import com.learning.accountservice.model.ChangePass;
 import com.learning.accountservice.model.ChangePassResponse;
@@ -33,22 +34,23 @@ public class Controller {
 
     @PostMapping("api/auth/signup")
     public User0 signUp(@Valid @RequestBody User0 user0) {
-        if (utils.isUserValid(user0)) {
-            User0 newUser0 = new User0();
-            newUser0.setName(user0.getName());
-            newUser0.setLastname(user0.getLastname());
-            newUser0.setEmail(user0.getEmail());
-            newUser0.setUsername(user0.getEmail());
-            newUser0.setPassword(encoder.encode(user0.getPassword()));
-            newUser0.grantRole(Role.ROLE_USER);
-            if (user0Repository.existsByEmail(user0.getEmail().toLowerCase())) {
-                throw new UserExistsException();
-            } else {
-                user0Repository.save(newUser0);
-                return newUser0;
-            }
+
+        if (utils.isOnBreachedPasswordsList(user0.getPassword())){
+            throw new BreachedPasswordException();
+        }
+
+        User0 newUser0 = new User0();
+        newUser0.setName(user0.getName());
+        newUser0.setLastname(user0.getLastname());
+        newUser0.setEmail(user0.getEmail());
+        newUser0.setUsername(user0.getEmail());
+        newUser0.setPassword(encoder.encode(user0.getPassword()));
+        newUser0.grantRole(Role.ROLE_USER);
+        if (user0Repository.existsByEmail(user0.getEmail().toLowerCase())) {
+            throw new UserExistsException();
         } else {
-            throw new BadUserException();
+            user0Repository.save(newUser0);
+            return newUser0;
         }
     }
 
@@ -74,6 +76,16 @@ public class Controller {
 
             if (user0Optional.isPresent()) {
                 User0 user0 = user0Optional.get();
+                String oldPassword = user0.getPassword();
+
+                if (utils.isNewPasswordSameAsOldPassword(newPassword, oldPassword)) {
+                    throw new SamePasswordException();
+                }
+
+                if (utils.isOnBreachedPasswordsList(newPassword)){
+                    throw new BreachedPasswordException();
+                }
+
                 user0.setPassword(encoder.encode(newPassword));
                 user0Repository.save(user0);
                 changePassResponse.setEmail(user0.getEmail());

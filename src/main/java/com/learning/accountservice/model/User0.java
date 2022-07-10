@@ -7,6 +7,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,11 +21,20 @@ public class User0 implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
+    @Pattern(regexp = "[a-zA-Z]+")
     private String name;
+
+    @NotNull
+    @Pattern(regexp = "[a-zA-Z]+")
     private String lastname;
+
+    @NotNull
+    @Pattern(regexp = "\\w+@acme\\.com")
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull
     @Size(min = 12, message = "The password length must be at least 12 chars!")
     private String password;
 
