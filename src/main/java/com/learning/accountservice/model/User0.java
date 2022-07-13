@@ -58,6 +58,10 @@ public class User0 implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)     // automatically creates one-to-many mapping
     private List<Role> roles;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private List<Salary> salaries;
+
     public Long getId() {
         return id;
     }
@@ -108,6 +112,14 @@ public class User0 implements UserDetails {
     public void grantRole(Role role) {
         if (roles == null) roles = new ArrayList<>();
         roles.add(role);
+    }
+
+    public List<Salary> getSalaries() {
+        return salaries;
+    }
+
+    public void setSalaries(List<Salary> salaries) {
+        this.salaries = salaries;
     }
 
     @JsonIgnore

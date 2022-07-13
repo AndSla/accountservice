@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionHandlers {
@@ -23,6 +25,29 @@ public class ExceptionHandlers {
         if (e.getFieldError() != null) {
             message = e.getFieldError().getDefaultMessage();
         }
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(httpStatus.value());
+        errorResponse.setError(httpStatus.getReasonPhrase());
+        errorResponse.setMessage(message);
+        errorResponse.setPath(request.getServletPath());
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(
+            ConstraintViolationException e,
+            HttpServletRequest request) {
+
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message;
+
+        message = e.getConstraintViolations().stream()
+                .map(cv -> cv.getPropertyPath() + ": " + cv.getMessage())
+                .collect(Collectors.joining(", "));
 
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatus(httpStatus.value());

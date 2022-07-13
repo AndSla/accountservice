@@ -3,10 +3,14 @@ package com.learning.accountservice.controller;
 import com.learning.accountservice.exception.BreachedPasswordException;
 import com.learning.accountservice.exception.SamePasswordException;
 import com.learning.accountservice.exception.UserExistsException;
-import com.learning.accountservice.model.*;
+import com.learning.accountservice.model.ChangePass;
+import com.learning.accountservice.model.Role;
+import com.learning.accountservice.model.Salary;
+import com.learning.accountservice.model.User0;
 import com.learning.accountservice.model.response.ChangePassResponse;
 import com.learning.accountservice.model.response.ChangeSalaryResponse;
 import com.learning.accountservice.model.response.UpdatePayrollsResponse;
+import com.learning.accountservice.repository.SalaryRepository;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,9 @@ public class Controller {
 
     @Autowired
     User0Repository user0Repository;
+
+    @Autowired
+    SalaryRepository salaryRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -102,9 +109,25 @@ public class Controller {
     }
 
     @PostMapping("api/acct/payments")
-    public UpdatePayrollsResponse updatePayrollsResponse(@RequestBody List<Salary> listOfSalaries) {
+    public UpdatePayrollsResponse updatePayrollsResponse(@Valid @RequestBody List<Salary> listOfSalaries) {
+
         UpdatePayrollsResponse updatePayrollsResponse = new UpdatePayrollsResponse();
-        updatePayrollsResponse.setStatus("Added successfully!");
+
+        for (Salary salary : listOfSalaries) {
+            String employee = salary.getEmployee();
+            String period = salary.getPeriod();
+
+            if (salaryRepository.existsByEmployeeAndPeriod(employee, period)) {
+                System.out.println("no can do");
+            } else if (user0Repository.existsByEmail(employee)){
+                salaryRepository.save(salary);
+                updatePayrollsResponse.setStatus("Added successfully!");
+            } else {
+                System.out.println("no such user");
+            }
+
+        }
+
         return updatePayrollsResponse;
     }
 
