@@ -1,6 +1,7 @@
 package com.learning.accountservice.controller;
 
 import com.learning.accountservice.exception.BreachedPasswordException;
+import com.learning.accountservice.exception.DuplicatePeriodException;
 import com.learning.accountservice.exception.SamePasswordException;
 import com.learning.accountservice.exception.UserExistsException;
 import com.learning.accountservice.model.ChangePass;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -108,6 +110,7 @@ public class Controller {
 
     }
 
+    @Transactional
     @PostMapping("api/acct/payments")
     public UpdatePayrollsResponse updatePayrollsResponse(@Valid @RequestBody List<Salary> listOfSalaries) {
 
@@ -118,8 +121,8 @@ public class Controller {
             String period = salary.getPeriod();
 
             if (salaryRepository.existsByEmployeeAndPeriod(employee, period)) {
-                System.out.println("no can do");
-            } else if (user0Repository.existsByEmail(employee)){
+                throw new DuplicatePeriodException();
+            } else if (user0Repository.existsByEmail(employee)) {
                 salaryRepository.save(salary);
                 updatePayrollsResponse.setStatus("Added successfully!");
             } else {
