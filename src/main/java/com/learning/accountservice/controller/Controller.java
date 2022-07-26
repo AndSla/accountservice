@@ -1,9 +1,6 @@
 package com.learning.accountservice.controller;
 
-import com.learning.accountservice.exception.BreachedPasswordException;
-import com.learning.accountservice.exception.DuplicatePeriodException;
-import com.learning.accountservice.exception.SamePasswordException;
-import com.learning.accountservice.exception.UserExistsException;
+import com.learning.accountservice.exception.*;
 import com.learning.accountservice.model.ChangePass;
 import com.learning.accountservice.model.Role;
 import com.learning.accountservice.model.Salary;
@@ -68,7 +65,7 @@ public class Controller {
         if (user0Optional.isPresent()) {
             return user0Optional.get();
         } else {
-            throw new UsernameNotFoundException(auth.getName());
+            throw new UserNotFoundException();
         }
     }
 
@@ -99,7 +96,7 @@ public class Controller {
                 changePassResponse.setEmail(user0.getEmail());
                 changePassResponse.setStatus("The password has been updated successfully");
             } else {
-                throw new UsernameNotFoundException(auth.getName());
+                throw new UserNotFoundException();
             }
 
         } else {
@@ -126,7 +123,7 @@ public class Controller {
                 salaryRepository.save(salary);
                 updatePayrollsResponse.setStatus("Added successfully!");
             } else {
-                System.out.println("no such user");
+                throw new UserNotFoundException();
             }
 
         }
