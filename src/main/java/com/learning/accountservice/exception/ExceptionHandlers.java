@@ -1,6 +1,7 @@
 package com.learning.accountservice.exception;
 
 import com.learning.accountservice.model.response.ErrorResponse;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,11 +21,11 @@ public class ExceptionHandlers {
             HttpServletRequest request) {
 
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        String message = "";
+        String message;
 
-        if (e.getFieldError() != null) {
-            message = e.getFieldError().getDefaultMessage();
-        }
+        message = e.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(", "));
 
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatus(httpStatus.value());

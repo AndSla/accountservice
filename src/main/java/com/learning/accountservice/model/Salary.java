@@ -19,7 +19,7 @@ public class Salary {
     private Long id;
 
     @NotNull
-    @Pattern(regexp = "\\w+@acme\\.com")
+    @Pattern(regexp = "\\w+@acme\\.com", message = "Wrong email!")
     private String employee;
 
     @Pattern(regexp = "(0[1-9]|1[0-2])-\\d\\d\\d\\d", message = "Wrong date!")
