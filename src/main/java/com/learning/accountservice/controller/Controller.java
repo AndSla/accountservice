@@ -11,6 +11,7 @@ import com.learning.accountservice.model.response.UpdatePayrollsResponse;
 import com.learning.accountservice.repository.SalaryRepository;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.Utils;
+import com.learning.accountservice.utils.ValidList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -108,11 +108,11 @@ public class Controller {
 
     @Transactional
     @PostMapping("api/acct/payments")
-    public UpdatePayrollsResponse updatePayrollsResponse(@Valid @RequestBody List<Salary> listOfSalaries) {
+    public UpdatePayrollsResponse updatePayrollsResponse(@Valid @RequestBody ValidList<Salary> listOfSalaries) {
 
         UpdatePayrollsResponse updatePayrollsResponse = new UpdatePayrollsResponse();
 
-        for (Salary salary : listOfSalaries) {
+        for (Salary salary : listOfSalaries.getPayments()) {
             String employee = salary.getEmployee();
             String period = salary.getPeriod();
 
