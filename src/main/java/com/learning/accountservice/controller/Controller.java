@@ -131,10 +131,27 @@ public class Controller {
     }
 
     @PutMapping("api/acct/payments")
-    public ChangeSalaryResponse changeSalaryResponse(@RequestBody Salary salary) {
+    public ChangeSalaryResponse changeSalaryResponse(@Valid @RequestBody Salary salary) {
+
         ChangeSalaryResponse changeSalaryResponse = new ChangeSalaryResponse();
-        changeSalaryResponse.setStatus("Updated successfully!");
+
+        String employee = salary.getEmployee();
+        String period = salary.getPeriod();
+        Long newSalary = salary.getSalary();
+
+        Optional<Salary> salaryOptional = salaryRepository.findByEmployeeAndPeriod(employee, period);
+
+        if (salaryOptional.isPresent()) {
+            Salary updateSalary = salaryOptional.get();
+            updateSalary.setSalary(newSalary);
+            salaryRepository.save(updateSalary);
+            changeSalaryResponse.setStatus("Updated successfully!");
+        } else {
+            throw new UserOrPeriodNotFoundException();
+        }
+
         return changeSalaryResponse;
+
     }
 
 }

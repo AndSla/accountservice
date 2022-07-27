@@ -96,7 +96,7 @@ public class ExceptionHandlers {
                 .body(errorResponse);
     }
 
-    @ExceptionHandler(DuplicatePeriodException.class)
+    @ExceptionHandler({DuplicatePeriodException.class, UserOrPeriodNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleDuplicatePeriodException(
             HttpServletRequest request) {
 
