@@ -16,7 +16,7 @@ public class ValidList<E> {
     public ValidList() {
     }
 
-    @JsonCreator
+    @JsonCreator // json in post request can be list - list of salaries
     public ValidList(List<E> payments) {
         this.payments = payments;
     }
