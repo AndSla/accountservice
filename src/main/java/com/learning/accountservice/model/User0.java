@@ -59,7 +59,7 @@ public class User0 implements UserDetails {
     private List<Role> roles;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "user0")
     private List<Salary> salaries;
 
     public Long getId() {
