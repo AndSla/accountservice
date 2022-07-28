@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public class PaymentResponse {
     private String name;
-    private String lastName;
+    private String lastname;
     private String period;
     private String salary;
 
@@ -21,12 +21,12 @@ public class PaymentResponse {
         this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getPeriod() {

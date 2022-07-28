@@ -11,6 +11,7 @@ import com.learning.accountservice.model.response.PaymentResponse;
 import com.learning.accountservice.model.response.UpdatePayrollsResponse;
 import com.learning.accountservice.repository.SalaryRepository;
 import com.learning.accountservice.repository.User0Repository;
+import com.learning.accountservice.utils.SortByPeriod;
 import com.learning.accountservice.utils.Utils;
 import com.learning.accountservice.utils.ValidList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class Controller {
                 Salary salary = salaryOptional.get();
                 PaymentResponse paymentResponse = new PaymentResponse();
                 paymentResponse.setName(user0.getName());
-                paymentResponse.setLastName(user0.getLastname());
+                paymentResponse.setLastname(user0.getLastname());
                 paymentResponse.setPeriod(salary.getPeriod());
                 paymentResponse.setSalary(salary.getSalary());
                 return paymentResponse;
@@ -98,12 +99,14 @@ public class Controller {
         }
 
         List<Salary> salaryList = user0.getSalaries();
+        salaryList.sort(new SortByPeriod());
+
         List<PaymentResponse> paymentResponseList = new ArrayList<>();
 
         for (Salary salary : salaryList) {
             PaymentResponse paymentResponse = new PaymentResponse();
             paymentResponse.setName(user0.getName());
-            paymentResponse.setLastName(user0.getLastname());
+            paymentResponse.setLastname(user0.getLastname());
             paymentResponse.setPeriod(salary.getPeriod());
             paymentResponse.setSalary(salary.getSalary());
             paymentResponseList.add(paymentResponse);
@@ -112,7 +115,6 @@ public class Controller {
         return paymentResponseList;
 
     }
-
 
     @PostMapping("api/auth/changepass")
     public ChangePassResponse changePassword(
