@@ -29,16 +29,14 @@ public class User0 implements UserDetails {
     @Pattern(regexp = "[a-zA-Z]+")
     private String lastname;
 
-    @NotNull
-    @Pattern(regexp = "\\w+@acme\\.com")
-    private String email;
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     @Size(min = 12, message = "Password length must be 12 chars minimum!")
     private String password;
 
-    @JsonIgnore
+    @JsonProperty(value = "email")
+    @NotNull
+    @Pattern(regexp = "\\w+@acme\\.com")
     private String username;
 
     @JsonIgnore
@@ -91,14 +89,6 @@ public class User0 implements UserDetails {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email.toLowerCase();
     }
 
     public String getPassword() {

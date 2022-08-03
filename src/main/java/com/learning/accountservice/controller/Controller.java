@@ -50,12 +50,11 @@ public class Controller {
         User0 newUser0 = new User0();
         newUser0.setName(user0.getName());
         newUser0.setLastname(user0.getLastname());
-        newUser0.setEmail(user0.getEmail());
-        newUser0.setUsername(user0.getEmail());
+        newUser0.setUsername(user0.getUsername());
         newUser0.setPassword(encoder.encode(user0.getPassword()));
         newUser0.grantRole(Role.ROLE_USER);
 
-        if (user0Repository.existsByEmail(user0.getEmail().toLowerCase())) {
+        if (user0Repository.existsByUsername(user0.getUsername().toLowerCase())) {
             throw new UserExistsException();
         } else {
             user0Repository.save(newUser0);
@@ -140,7 +139,7 @@ public class Controller {
 
                 user0.setPassword(encoder.encode(newPassword));
                 user0Repository.save(user0);
-                changePassResponse.setEmail(user0.getEmail());
+                changePassResponse.setEmail(user0.getUsername());
                 changePassResponse.setStatus("The password has been updated successfully");
             } else {
                 throw new UserNotFoundException();
