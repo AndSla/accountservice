@@ -29,15 +29,24 @@ public class User0 implements UserDetails {
     @Pattern(regexp = "[a-zA-Z]+")
     private String lastname;
 
+    @JsonProperty(value = "email")
+    @NotNull
+    @Pattern(regexp = "\\w+@acme\\.com")
+    private String username;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Enumerated(EnumType.STRING)                    // table column will be of enum type
+    @ElementCollection(fetch = FetchType.EAGER)     // automatically creates one-to-many mapping
+    private List<Role> roles;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     @Size(min = 12, message = "Password length must be 12 chars minimum!")
     private String password;
 
-    @JsonProperty(value = "email")
-    @NotNull
-    @Pattern(regexp = "\\w+@acme\\.com")
-    private String username;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user0")
+    private List<Salary> salaries;
 
     @JsonIgnore
     private boolean accountNonExpired;
@@ -51,14 +60,12 @@ public class User0 implements UserDetails {
     @JsonIgnore
     private boolean enabled;
 
-    @JsonIgnore
-    @Enumerated(EnumType.STRING)                    // table column will be of enum type
-    @ElementCollection(fetch = FetchType.EAGER)     // automatically creates one-to-many mapping
-    private List<Role> roles;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user0")
-    private List<Salary> salaries;
+    public User0() {
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+        this.enabled = true;
+    }
 
     public Long getId() {
         return id;
@@ -66,13 +73,6 @@ public class User0 implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public User0() {
-        this.accountNonExpired = true;
-        this.accountNonLocked = true;
-        this.credentialsNonExpired = true;
-        this.enabled = true;
     }
 
     public String getName() {
@@ -91,17 +91,30 @@ public class User0 implements UserDetails {
         this.lastname = lastname;
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUsername(String username) {
+        this.username = username.toLowerCase();
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public void grantRole(Role role) {
         if (roles == null) roles = new ArrayList<>();
         roles.add(role);
+    }
+
+    public void removeRole(Role role) {
+        roles.remove(role);
     }
 
     public List<Salary> getSalaries() {
@@ -112,21 +125,20 @@ public class User0 implements UserDetails {
         this.salaries = salaries;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.toString())));
         return authorities;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username.toLowerCase();
     }
 
     @Override

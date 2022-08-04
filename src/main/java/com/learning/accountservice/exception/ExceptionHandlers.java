@@ -116,9 +116,10 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(
+            UserNotFoundException e,
             HttpServletRequest request) {
 
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        HttpStatus httpStatus = e.getHttpStatus();
         String message = "User not found!";
 
         ErrorResponse errorResponse = new ErrorResponse();

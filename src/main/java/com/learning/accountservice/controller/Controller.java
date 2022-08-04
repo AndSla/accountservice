@@ -1,20 +1,15 @@
 package com.learning.accountservice.controller;
 
 import com.learning.accountservice.exception.*;
-import com.learning.accountservice.model.ChangePass;
-import com.learning.accountservice.model.Role;
-import com.learning.accountservice.model.Salary;
-import com.learning.accountservice.model.User0;
-import com.learning.accountservice.model.response.ChangePassResponse;
-import com.learning.accountservice.model.response.ChangeSalaryResponse;
-import com.learning.accountservice.model.response.PaymentResponse;
-import com.learning.accountservice.model.response.UpdatePayrollsResponse;
+import com.learning.accountservice.model.*;
+import com.learning.accountservice.model.response.*;
 import com.learning.accountservice.repository.SalaryRepository;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.SortByPeriod;
 import com.learning.accountservice.utils.Utils;
 import com.learning.accountservice.utils.ValidList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,19 +42,22 @@ public class Controller {
             throw new BreachedPasswordException();
         }
 
+        if (user0Repository.existsByUsername(user0.getUsername().toLowerCase())) {
+            throw new UserExistsException();
+        }
+
         User0 newUser0 = new User0();
         newUser0.setName(user0.getName());
         newUser0.setLastname(user0.getLastname());
         newUser0.setUsername(user0.getUsername());
         newUser0.setPassword(encoder.encode(user0.getPassword()));
-        newUser0.grantRole(Role.ROLE_USER);
-
-        if (user0Repository.existsByUsername(user0.getUsername().toLowerCase())) {
-            throw new UserExistsException();
+        if (user0Repository.count() == 0) {
+            newUser0.grantRole(Role.ROLE_ADMIN);
         } else {
-            user0Repository.save(newUser0);
-            return newUser0;
+            newUser0.grantRole(Role.ROLE_USER);
         }
+        user0Repository.save(newUser0);
+        return newUser0;
 
     }
 
@@ -72,7 +70,7 @@ public class Controller {
         if (user0Optional.isPresent()) {
             user0 = user0Optional.get();
         } else {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException(HttpStatus.BAD_REQUEST);
         }
 
         if (period != null) {
@@ -142,7 +140,7 @@ public class Controller {
                 changePassResponse.setEmail(user0.getUsername());
                 changePassResponse.setStatus("The password has been updated successfully");
             } else {
-                throw new UserNotFoundException();
+                throw new UserNotFoundException(HttpStatus.BAD_REQUEST);
             }
 
         } else {
@@ -171,7 +169,7 @@ public class Controller {
                 if (user0Optional.isPresent()) {
                     user0 = user0Optional.get();
                 } else {
-                    throw new UserNotFoundException();
+                    throw new UserNotFoundException(HttpStatus.BAD_REQUEST);
                 }
 
                 salary.setUser0(user0);
@@ -222,6 +220,36 @@ public class Controller {
 
         return changeSalaryResponse;
 
+    }
+
+    @PutMapping("api/admin/user/role")
+    public User0 setRoles(@RequestBody SetRole setRole) {
+
+        String username = setRole.getUser();
+        Role role = setRole.getRole();
+        Operation operation = setRole.getOperation();
+
+        Optional<User0> user0Optional = user0Repository.findByUsername(username);
+        User0 user0;
+
+        if (user0Optional.isPresent()) {
+            user0 = user0Optional.get();
+        } else {
+            throw new UserNotFoundException(HttpStatus.NOT_FOUND);
+        }
+
+        switch (operation){
+            case GRANT:
+                user0.grantRole(role);
+                break;
+            case REMOVE:
+                user0.removeRole(role);
+                break;
+        }
+
+        user0Repository.save(user0);
+
+        return user0;
     }
 
 }
