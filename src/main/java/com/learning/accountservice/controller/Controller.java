@@ -179,7 +179,6 @@ public class Controller {
                 user0.setSalaries(user0Salaries);
 
                 user0Repository.save(user0);
-                salaryRepository.save(salary);
 
                 updatePayrollsResponse.setStatus("Added successfully!");
 
@@ -256,6 +255,32 @@ public class Controller {
     public List<User0> getUsers() {
 
         return user0Repository.findAll();
+
+    }
+
+    @DeleteMapping("api/admin/user/{user}")
+    public DeleteUserResponse deleteUser(@PathVariable String user) {
+
+        DeleteUserResponse deleteUserResponse = new DeleteUserResponse();
+
+        Optional<User0> user0Optional = user0Repository.findByUsername(user);
+        User0 user0;
+
+        if (user0Optional.isPresent()) {
+            user0 = user0Optional.get();
+        } else {
+            throw new UserNotFoundException(HttpStatus.NOT_FOUND);
+        }
+
+        if (user0.getRoles().contains(Role.ROLE_ADMIN)) {
+            throw new DeleteAdminAttemptException();
+        }
+
+        user0Repository.delete(user0);
+        deleteUserResponse.setUser(user0.getUsername());
+        deleteUserResponse.setStatus("Deleted successfully!");
+
+        return deleteUserResponse;
 
     }
 

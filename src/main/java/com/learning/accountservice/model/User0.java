@@ -45,7 +45,7 @@ public class User0 implements UserDetails {
     private String password;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user0")
+    @OneToMany(mappedBy = "user0", cascade = CascadeType.ALL)
     private List<Salary> salaries;
 
     @JsonIgnore
