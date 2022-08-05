@@ -238,7 +238,7 @@ public class Controller {
             throw new UserNotFoundException(HttpStatus.NOT_FOUND);
         }
 
-        switch (operation){
+        switch (operation) {
             case GRANT:
                 user0.grantRole(role);
                 break;
@@ -250,6 +250,13 @@ public class Controller {
         user0Repository.save(user0);
 
         return user0;
+    }
+
+    @GetMapping("api/admin/user")
+    public List<User0> getUsers() {
+
+        return user0Repository.findAll();
+
     }
 
 }
