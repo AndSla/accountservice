@@ -1,13 +1,14 @@
 package com.learning.accountservice.config;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class BreachedPasswords {
     private final List<String> listOfBreachedPasswords;
 
     public BreachedPasswords() {
-        listOfBreachedPasswords = List.of("PasswordForJanuary", "PasswordForFebruary", "PasswordForMarch", "PasswordForApril",
-                "PasswordForMay", "PasswordForJune", "PasswordForJuly", "PasswordForAugust",
+        listOfBreachedPasswords = Arrays.asList("PasswordForJanuary", "PasswordForFebruary", "PasswordForMarch",
+                "PasswordForApril", "PasswordForMay", "PasswordForJune", "PasswordForJuly", "PasswordForAugust",
                 "PasswordForSeptember", "PasswordForOctober", "PasswordForNovember", "PasswordForDecember");
     }
 

@@ -1,5 +1,6 @@
-package com.learning.accountservice.exception;
+package com.learning.accountservice.exception.handler;
 
+import com.learning.accountservice.exception.*;
 import com.learning.accountservice.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -135,7 +136,6 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(DeleteAdminAttemptException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(
-            DeleteAdminAttemptException e,
             HttpServletRequest request) {
 
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
