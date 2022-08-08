@@ -152,4 +152,22 @@ public class ExceptionHandlers {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRoleNotFoundException(
+            HttpServletRequest request) {
+
+        HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+        String message = "Role not found!";
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(httpStatus.value());
+        errorResponse.setError(httpStatus.getReasonPhrase());
+        errorResponse.setMessage(message);
+        errorResponse.setPath(request.getServletPath());
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(errorResponse);
+    }
+
 }
