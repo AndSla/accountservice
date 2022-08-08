@@ -239,11 +239,25 @@ public class Controller {
 
         switch (operation) {
             case GRANT:
-                user0.grantRole(role);
+                for (Role user0Role : user0.getRoles()) {
+                    if (!user0Role.getGroup().equals(role.getGroup())) {
+                        throw new CombineAdminAndBusinessRolesException();
+                    }
+                }
+                if (!user0.getRoles().contains(role)) {
+                    user0.grantRole(role);
+                }
                 break;
             case REMOVE:
-                user0.removeRole(role);
-                break;
+                if (user0.getRoles().size() <= 1) {
+                    throw new LastSingleRoleRemovalAttemptException();
+                }
+                if (user0.getRoles().contains(role)) {
+                    user0.removeRole(role);
+                    break;
+                } else {
+                    throw new NoSuchRoleException();
+                }
         }
 
         user0Repository.save(user0);
