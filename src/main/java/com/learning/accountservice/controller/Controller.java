@@ -230,9 +230,11 @@ public class Controller {
 
         Optional<User0> user0Optional = user0Repository.findByUsername(username);
         User0 user0;
+        List<Role> userRoles;
 
         if (user0Optional.isPresent()) {
             user0 = user0Optional.get();
+            userRoles = user0.getRoles();
         } else {
             throw new UserNotFoundException(HttpStatus.NOT_FOUND);
         }
