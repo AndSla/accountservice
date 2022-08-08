@@ -52,7 +52,7 @@ public class Controller {
         newUser0.setUsername(user0.getUsername());
         newUser0.setPassword(encoder.encode(user0.getPassword()));
         if (user0Repository.count() == 0) {
-            newUser0.grantRole(Role.ROLE_ADMIN);
+            newUser0.grantRole(Role.ROLE_ADMINISTRATOR);
         } else {
             newUser0.grantRole(Role.ROLE_USER);
         }
@@ -230,11 +230,9 @@ public class Controller {
 
         Optional<User0> user0Optional = user0Repository.findByUsername(username);
         User0 user0;
-        List<Role> userRoles;
 
         if (user0Optional.isPresent()) {
             user0 = user0Optional.get();
-            userRoles = user0.getRoles();
         } else {
             throw new UserNotFoundException(HttpStatus.NOT_FOUND);
         }
@@ -253,6 +251,9 @@ public class Controller {
             case REMOVE:
                 if (user0.getRoles().size() <= 1) {
                     throw new LastSingleRoleRemovalAttemptException();
+                }
+                if (role == Role.ROLE_ADMINISTRATOR) {
+                    throw new DeleteAdminAttemptException();
                 }
                 if (user0.getRoles().contains(role)) {
                     user0.removeRole(role);
@@ -288,7 +289,7 @@ public class Controller {
             throw new UserNotFoundException(HttpStatus.NOT_FOUND);
         }
 
-        if (user0.getRoles().contains(Role.ROLE_ADMIN)) {
+        if (user0.getRoles().contains(Role.ROLE_ADMINISTRATOR)) {
             throw new DeleteAdminAttemptException();
         }
 

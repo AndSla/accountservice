@@ -1,7 +1,7 @@
 package com.learning.accountservice.model;
 
 public enum Role {
-    ROLE_ADMIN(RoleGroup.ADMINS),
+    ROLE_ADMINISTRATOR(RoleGroup.ADMINS),
     ROLE_USER(RoleGroup.USERS),
     ROLE_ACCOUNTANT(RoleGroup.USERS);
 
