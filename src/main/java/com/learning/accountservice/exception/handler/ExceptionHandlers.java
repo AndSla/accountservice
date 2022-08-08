@@ -170,4 +170,58 @@ public class ExceptionHandlers {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(NoSuchRoleException.class)
+    public ResponseEntity<ErrorResponse> handleNoSuchRoleException(
+            HttpServletRequest request) {
+
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "The user does not have a role!";
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(httpStatus.value());
+        errorResponse.setError(httpStatus.getReasonPhrase());
+        errorResponse.setMessage(message);
+        errorResponse.setPath(request.getServletPath());
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(LastSingleRoleRemovalAttemptException.class)
+    public ResponseEntity<ErrorResponse> handleLastSingleRoleRemovalAttemptException(
+            HttpServletRequest request) {
+
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "The user must have at least one role!";
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(httpStatus.value());
+        errorResponse.setError(httpStatus.getReasonPhrase());
+        errorResponse.setMessage(message);
+        errorResponse.setPath(request.getServletPath());
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(CombineAdminAndBusinessRolesException.class)
+    public ResponseEntity<ErrorResponse> handleCombineAdminAndBusinessRolesException(
+            HttpServletRequest request) {
+
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "The user cannot combine administrative and business roles!";
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(httpStatus.value());
+        errorResponse.setError(httpStatus.getReasonPhrase());
+        errorResponse.setMessage(message);
+        errorResponse.setPath(request.getServletPath());
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(errorResponse);
+    }
+
 }
