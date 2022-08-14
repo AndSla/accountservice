@@ -326,6 +326,7 @@ public class Controller {
                 break;
             case UNLOCK:
                 user0.setAccountNonLocked(true);
+                user0.setFailedLoginAttempts(0);
         }
 
         user0Repository.save(user0);

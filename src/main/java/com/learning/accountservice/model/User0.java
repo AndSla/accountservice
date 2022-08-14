@@ -51,6 +51,9 @@ public class User0 implements UserDetails {
     private List<Salary> salaries;
 
     @JsonIgnore
+    private int failedLoginAttempts;
+
+    @JsonIgnore
     private boolean accountNonExpired;
 
     @JsonIgnore
@@ -126,6 +129,14 @@ public class User0 implements UserDetails {
 
     public void setSalaries(List<Salary> salaries) {
         this.salaries = salaries;
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
     }
 
     public String getPassword() {
