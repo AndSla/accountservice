@@ -224,7 +224,7 @@ public class Controller {
     @PutMapping("api/admin/user/role")
     public User0 setRoles(@RequestBody SetRole setRole) {
 
-        String username = setRole.getUser();
+        String username = setRole.getUser().toLowerCase();
         Role role = setRole.getRole();
         Operation operation = setRole.getOperation();
 
@@ -249,13 +249,15 @@ public class Controller {
                 }
                 break;
             case REMOVE:
-                if (user0.getRoles().size() <= 1) {
-                    throw new LastSingleRoleRemovalAttemptException();
-                }
                 if (role == Role.ROLE_ADMINISTRATOR) {
                     throw new DeleteAdminAttemptException();
                 }
                 if (user0.getRoles().contains(role)) {
+
+                    if (user0.getRoles().size() <= 1) {
+                        throw new LastSingleRoleRemovalAttemptException();
+                    }
+
                     user0.removeRole(role);
                     break;
                 } else {

@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/api/admin/user")
                 .hasRole("ADMINISTRATOR")
-                .mvcMatchers(HttpMethod.DELETE, "/api/admin/user/*")
+                .mvcMatchers(HttpMethod.DELETE, "/api/admin/user/**")
                 .hasRole("ADMINISTRATOR")
                 .mvcMatchers(HttpMethod.PUT, "/api/admin/user/role")
                 .hasRole("ADMINISTRATOR")
