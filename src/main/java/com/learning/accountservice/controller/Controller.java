@@ -305,4 +305,33 @@ public class Controller {
 
     }
 
+    @PutMapping("api/admin/user/access")
+    public SetAccessResponse setAccess(@RequestBody SetAccess setAccess) {
+
+        String username = setAccess.getUser();
+        Operation operation = setAccess.getOperation();
+
+        Optional<User0> user0Optional = user0Repository.findByUsername(username);
+        User0 user0;
+
+        if (user0Optional.isPresent()) {
+            user0 = user0Optional.get();
+        } else {
+            throw new UserNotFoundException(HttpStatus.NOT_FOUND);
+        }
+
+        switch (operation) {
+            case LOCK:
+                user0.setAccountNonLocked(false);
+                break;
+            case UNLOCK:
+                user0.setAccountNonLocked(true);
+        }
+
+        user0Repository.save(user0);
+
+        return new SetAccessResponse(username, operation);
+
+    }
+
 }
