@@ -1,5 +1,6 @@
 package com.learning.accountservice.utils;
 
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -20,7 +21,7 @@ public class RoleDeserializer extends StdDeserializer<Role> {
 
     @Override
     public Role deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-            throws IOException {
+            throws IOException, JacksonException {
 
         Role result;
 
@@ -31,6 +32,7 @@ public class RoleDeserializer extends StdDeserializer<Role> {
         }
 
         return result;
+
     }
 
 }

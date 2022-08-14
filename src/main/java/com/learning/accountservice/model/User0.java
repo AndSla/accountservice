@@ -2,6 +2,7 @@ package com.learning.accountservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.learning.accountservice.utils.SortByRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -111,6 +112,7 @@ public class User0 implements UserDetails {
     public void grantRole(Role role) {
         if (roles == null) roles = new ArrayList<>();
         roles.add(role);
+        roles.sort(new SortByRole());
     }
 
     public void removeRole(Role role) {
