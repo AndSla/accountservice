@@ -322,6 +322,9 @@ public class Controller {
 
         switch (operation) {
             case LOCK:
+                if (user0.getRoles().contains(Role.ROLE_ADMINISTRATOR)) {
+                    throw new LockAdminAttemptException();
+                }
                 user0.setAccountNonLocked(false);
                 break;
             case UNLOCK:

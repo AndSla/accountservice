@@ -224,4 +224,22 @@ public class ExceptionHandlers {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(LockAdminAttemptException.class)
+    public ResponseEntity<ErrorResponse> handleLockAdminAttemptException(
+            HttpServletRequest request) {
+
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "Can't lock the ADMINISTRATOR!";
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(httpStatus.value());
+        errorResponse.setError(httpStatus.getReasonPhrase());
+        errorResponse.setMessage(message);
+        errorResponse.setPath(request.getServletPath());
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(errorResponse);
+    }
+
 }
