@@ -1,6 +1,8 @@
 package com.learning.accountservice.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.learning.accountservice.model.enums.Operation;
+import com.learning.accountservice.model.enums.Role;
 import com.learning.accountservice.utils.RoleDeserializer;
 
 import javax.persistence.EnumType;

@@ -1,6 +1,6 @@
 package com.learning.accountservice.utils;
 
-import com.learning.accountservice.model.Role;
+import com.learning.accountservice.model.enums.Role;
 
 import java.util.Comparator;
 

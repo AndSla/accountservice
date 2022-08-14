@@ -1,4 +1,4 @@
-package com.learning.accountservice.model;
+package com.learning.accountservice.model.enums;
 
 public enum RoleGroup {
     ADMINS,

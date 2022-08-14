@@ -2,6 +2,7 @@ package com.learning.accountservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.learning.accountservice.model.enums.Role;
 import com.learning.accountservice.utils.SortByRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

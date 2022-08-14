@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.learning.accountservice.exception.RoleNotFoundException;
-import com.learning.accountservice.model.Role;
+import com.learning.accountservice.model.enums.Role;
 
 import java.io.IOException;
 

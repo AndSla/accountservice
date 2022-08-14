@@ -1,11 +1,12 @@
-package com.learning.accountservice.model;
+package com.learning.accountservice.model.enums;
 
 public enum Role {
     ROLE_ADMINISTRATOR(RoleGroup.ADMINS),
     ROLE_USER(RoleGroup.USERS),
-    ROLE_ACCOUNTANT(RoleGroup.USERS);
+    ROLE_ACCOUNTANT(RoleGroup.USERS),
+    ROLE_AUDITOR(RoleGroup.USERS);
 
-    RoleGroup group;
+    final RoleGroup group;
 
     Role(RoleGroup group) {
         this.group = group;
