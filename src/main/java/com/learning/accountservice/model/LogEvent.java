@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class SecurityEvent {
+public class LogEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,7 +18,8 @@ public class SecurityEvent {
     private String object;
     private String path;
 
-    public SecurityEvent() {
+    public LogEvent() {
+        this.date = LocalDateTime.now();
     }
 
     public long getId() {

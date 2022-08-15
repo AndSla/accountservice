@@ -6,6 +6,7 @@ import com.learning.accountservice.model.enums.Operation;
 import com.learning.accountservice.model.enums.Role;
 import com.learning.accountservice.model.enums.EventMsg;
 import com.learning.accountservice.model.response.*;
+import com.learning.accountservice.repository.LogEventRepository;
 import com.learning.accountservice.repository.SalaryRepository;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.SortByPeriod;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +42,13 @@ public class Controller {
     SalaryRepository salaryRepository;
 
     @Autowired
+    LogEventRepository logEventRepository;
+
+    @Autowired
     PasswordEncoder encoder;
 
     @PostMapping("api/auth/signup")
-    public User0 signUp(@Valid @RequestBody User0 user0) {
+    public User0 signUp(@Valid @RequestBody User0 user0, HttpServletRequest request) {
 
         if (utils.isOnBreachedPasswordsList(user0.getPassword())) {
             throw new BreachedPasswordException();
@@ -64,6 +69,13 @@ public class Controller {
             newUser0.grantRole(Role.ROLE_USER);
         }
         user0Repository.save(newUser0);
+
+        LogEvent logEvent = new LogEvent();
+        logEvent.setAction(EventMsg.CREATE_USER.getMessage());
+        logEvent.setSubject("Anonymous");
+        logEvent.setObject(newUser0.getUsername());
+        logEvent.setPath(request.getServletPath());
+        logEventRepository.save(logEvent);
         logger.info(EventMsg.CREATE_USER.getMessage());
         return newUser0;
 
@@ -349,6 +361,11 @@ public class Controller {
 
         return new SetAccessResponse(username, operation);
 
+    }
+
+    @GetMapping("api/security/events")
+    public List<LogEvent> getLog() {
+        return logEventRepository.findAll();
     }
 
 }
