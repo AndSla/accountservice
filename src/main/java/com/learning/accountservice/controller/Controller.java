@@ -4,12 +4,15 @@ import com.learning.accountservice.exception.*;
 import com.learning.accountservice.model.*;
 import com.learning.accountservice.model.enums.Operation;
 import com.learning.accountservice.model.enums.Role;
+import com.learning.accountservice.model.enums.EventMsg;
 import com.learning.accountservice.model.response.*;
 import com.learning.accountservice.repository.SalaryRepository;
 import com.learning.accountservice.repository.User0Repository;
 import com.learning.accountservice.utils.SortByPeriod;
 import com.learning.accountservice.utils.Utils;
 import com.learning.accountservice.utils.ValidList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -25,6 +28,8 @@ import java.util.Optional;
 
 @RestController
 public class Controller {
+
+    private final Logger logger = LoggerFactory.getLogger(Controller.class);
 
     Utils utils = new Utils();
 
@@ -59,6 +64,7 @@ public class Controller {
             newUser0.grantRole(Role.ROLE_USER);
         }
         user0Repository.save(newUser0);
+        logger.info(EventMsg.CREATE_USER.getMessage());
         return newUser0;
 
     }
@@ -139,6 +145,7 @@ public class Controller {
 
                 user0.setPassword(encoder.encode(newPassword));
                 user0Repository.save(user0);
+                logger.info(EventMsg.CHANGE_PASSWORD.getMessage());
                 changePassResponse.setEmail(user0.getUsername());
                 changePassResponse.setStatus("The password has been updated successfully");
             } else {
@@ -248,6 +255,7 @@ public class Controller {
                 }
                 if (!user0.getRoles().contains(role)) {
                     user0.grantRole(role);
+                    logger.info(EventMsg.GRANT_ROLE.getMessage());
                 }
                 break;
             case REMOVE:
@@ -261,6 +269,7 @@ public class Controller {
                     }
 
                     user0.removeRole(role);
+                    logger.info(EventMsg.REMOVE_ROLE.getMessage());
                     break;
                 } else {
                     throw new NoSuchRoleException();
@@ -301,6 +310,8 @@ public class Controller {
         deleteUserResponse.setUser(user0.getUsername());
         deleteUserResponse.setStatus("Deleted successfully!");
 
+        logger.info(EventMsg.DELETE_USER.getMessage());
+
         return deleteUserResponse;
 
     }
@@ -326,10 +337,12 @@ public class Controller {
                     throw new LockAdminAttemptException();
                 }
                 user0.setAccountNonLocked(false);
+                logger.info(EventMsg.LOCK_USER.getMessage());
                 break;
             case UNLOCK:
                 user0.setAccountNonLocked(true);
                 user0.setFailedLoginAttempts(0);
+                logger.info(EventMsg.UNLOCK_USER.getMessage());
         }
 
         user0Repository.save(user0);

@@ -1,6 +1,6 @@
 package com.learning.accountservice.model.enums;
 
-public enum SecurityEventMsg {
+public enum EventMsg {
     CREATE_USER("A user has been successfully registered"),
     CHANGE_PASSWORD("A user has changed the password successfully"),
     ACCESS_DENIED("A user is trying to access a resource without access rights"),
@@ -14,7 +14,7 @@ public enum SecurityEventMsg {
 
     final String message;
 
-    SecurityEventMsg(String message) {
+    EventMsg(String message) {
         this.message = message;
     }
 
