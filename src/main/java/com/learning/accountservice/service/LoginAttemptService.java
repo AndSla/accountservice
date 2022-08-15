@@ -39,6 +39,7 @@ public class LoginAttemptService {
             if (attempts > MAX_LOGIN_ATTEMPTS) {
                 user0.setAccountNonLocked(false);
                 logger.info(EventMsg.BRUTE_FORCE.getMessage());
+                logger.info(EventMsg.LOCK_USER.getMessage());
             }
 
             user0.setFailedLoginAttempts(attempts);
