@@ -33,13 +33,15 @@ public class LoginAttemptService {
             if (loginAttempt == LoginAttempt.FAILURE) {
                 attempts = user0.getFailedLoginAttempts();
                 attempts++;
-                logger.info(EventMsg.LOGIN_FAILED.getMessage());
-            }
 
-            if (attempts > MAX_LOGIN_ATTEMPTS) {
-                user0.setAccountNonLocked(false);
-                logger.info(EventMsg.BRUTE_FORCE.getMessage());
-                logger.info(EventMsg.LOCK_USER.getMessage());
+                if (attempts > MAX_LOGIN_ATTEMPTS) {
+                    user0.setAccountNonLocked(false);
+                    logger.info(EventMsg.BRUTE_FORCE.getMessage());
+                    logger.info(EventMsg.LOCK_USER.getMessage());
+                    return;
+                }
+
+                logger.info(EventMsg.LOGIN_FAILED.getMessage());
             }
 
             user0.setFailedLoginAttempts(attempts);
