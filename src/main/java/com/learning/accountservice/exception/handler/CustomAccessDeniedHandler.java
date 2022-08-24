@@ -28,7 +28,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         HttpStatus httpStatus = HttpStatus.FORBIDDEN;
         String message = "Access Denied!";
 
-        logService.log(EventMsg.ACCESS_DENIED.getMessage(),
+        logService.log(EventMsg.ACCESS_DENIED.name(),
                 request.getRemoteUser(),
                 request.getServletPath(),
                 request.getServletPath());

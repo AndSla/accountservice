@@ -152,7 +152,7 @@ public class Controller {
                 user0.setPassword(encoder.encode(newPassword));
                 user0Repository.save(user0);
 
-                logService.log(EventMsg.CHANGE_PASSWORD.getMessage(),
+                logService.log(EventMsg.CHANGE_PASSWORD.name(),
                         user0.getUsername(),
                         user0.getUsername(),
                         request.getServletPath());
@@ -366,7 +366,7 @@ public class Controller {
                 user0.setAccountNonLocked(false);
 
                 logService.log(EventMsg.LOCK_USER.name(),
-                        username,
+                        request.getRemoteUser(),
                         "Lock user " + username,
                         request.getServletPath());
 
@@ -377,7 +377,7 @@ public class Controller {
                 user0.setFailedLoginAttempts(0);
 
                 logService.log(EventMsg.UNLOCK_USER.name(),
-                        username,
+                        request.getRemoteUser(),
                         "Unlock user " + username,
                         request.getServletPath());
 
