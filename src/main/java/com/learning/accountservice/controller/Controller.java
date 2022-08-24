@@ -270,7 +270,7 @@ public class Controller {
 
                     logService.log(EventMsg.GRANT_ROLE.name(),
                             request.getRemoteUser(),
-                            "Grant role " + role.name() + " to " + user0.getUsername(),
+                            "Grant role " + role.name().substring(5) + " to " + user0.getUsername(),
                             request.getServletPath());
 
                 }
@@ -289,7 +289,7 @@ public class Controller {
 
                     logService.log(EventMsg.REMOVE_ROLE.name(),
                             request.getRemoteUser(),
-                            "Remove role " + role.name() + " from " + user0.getUsername(),
+                            "Remove role " + role.name().substring(5) + " from " + user0.getUsername(),
                             request.getServletPath());
 
                     break;
