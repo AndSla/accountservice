@@ -66,7 +66,7 @@ public class Controller {
         }
         user0Repository.save(newUser0);
 
-        logService.log(EventMsg.CREATE_USER.getMessage(),
+        logService.log(EventMsg.CREATE_USER.name(),
                 "Anonymous",
                 newUser0.getUsername(),
                 request.getServletPath());
@@ -130,7 +130,7 @@ public class Controller {
     @PostMapping("api/auth/changepass")
     public ChangePassResponse changePassword(
             @Valid @RequestBody ChangePass changePass,
-            Authentication auth) {
+            Authentication auth, HttpServletRequest request) {
         String newPassword = changePass.getNewPassword();
         ChangePassResponse changePassResponse = new ChangePassResponse();
 
@@ -151,8 +151,12 @@ public class Controller {
 
                 user0.setPassword(encoder.encode(newPassword));
                 user0Repository.save(user0);
-                //todo
-                //logger.info(EventMsg.CHANGE_PASSWORD.getMessage());
+
+                logService.log(EventMsg.CHANGE_PASSWORD.getMessage(),
+                        user0.getUsername(),
+                        user0.getUsername(),
+                        request.getServletPath());
+
                 changePassResponse.setEmail(user0.getUsername());
                 changePassResponse.setStatus("The password has been updated successfully");
             } else {
@@ -238,7 +242,8 @@ public class Controller {
     }
 
     @PutMapping("api/admin/user/role")
-    public User0 setRoles(@RequestBody SetRole setRole) {
+    public User0 setRoles(@RequestBody SetRole setRole,
+                          HttpServletRequest request) {
 
         String username = setRole.getUser().toLowerCase();
         Role role = setRole.getRole();
@@ -262,8 +267,12 @@ public class Controller {
                 }
                 if (!user0.getRoles().contains(role)) {
                     user0.grantRole(role);
-                    //todo
-                    //logger.info(EventMsg.GRANT_ROLE.getMessage());
+
+                    logService.log(EventMsg.GRANT_ROLE.name(),
+                            request.getRemoteUser(),
+                            "Grant role " + role.name() + " to " + user0.getUsername(),
+                            request.getServletPath());
+
                 }
                 break;
             case REMOVE:
@@ -277,8 +286,12 @@ public class Controller {
                     }
 
                     user0.removeRole(role);
-                    //todo
-                    //logger.info(EventMsg.REMOVE_ROLE.getMessage());
+
+                    logService.log(EventMsg.REMOVE_ROLE.name(),
+                            request.getRemoteUser(),
+                            "Remove role " + role.name() + " from " + user0.getUsername(),
+                            request.getServletPath());
+
                     break;
                 } else {
                     throw new NoSuchRoleException();
@@ -298,7 +311,8 @@ public class Controller {
     }
 
     @DeleteMapping("api/admin/user/{user}")
-    public DeleteUserResponse deleteUser(@PathVariable String user) {
+    public DeleteUserResponse deleteUser(@PathVariable String user,
+                                         HttpServletRequest request) {
 
         DeleteUserResponse deleteUserResponse = new DeleteUserResponse();
 
@@ -318,15 +332,19 @@ public class Controller {
         user0Repository.delete(user0);
         deleteUserResponse.setUser(user0.getUsername());
         deleteUserResponse.setStatus("Deleted successfully!");
-        //todo
-        //logger.info(EventMsg.DELETE_USER.getMessage());
+
+        logService.log(EventMsg.DELETE_USER.name(),
+                request.getRemoteUser(),
+                user0.getUsername(),
+                request.getServletPath());
 
         return deleteUserResponse;
 
     }
 
     @PutMapping("api/admin/user/access")
-    public SetAccessResponse setAccess(@RequestBody SetAccess setAccess) {
+    public SetAccessResponse setAccess(@RequestBody SetAccess setAccess,
+                                       HttpServletRequest request) {
 
         String username = setAccess.getUser();
         Operation operation = setAccess.getOperation();
@@ -346,14 +364,23 @@ public class Controller {
                     throw new LockAdminAttemptException();
                 }
                 user0.setAccountNonLocked(false);
-                //todo
-                //logger.info(EventMsg.LOCK_USER.getMessage());
+
+                logService.log(EventMsg.LOCK_USER.name(),
+                        username,
+                        "Lock user " + username,
+                        request.getServletPath());
+
                 break;
+
             case UNLOCK:
                 user0.setAccountNonLocked(true);
                 user0.setFailedLoginAttempts(0);
-                //todo
-                //logger.info(EventMsg.UNLOCK_USER.getMessage());
+
+                logService.log(EventMsg.UNLOCK_USER.name(),
+                        username,
+                        "Unlock user " + username,
+                        request.getServletPath());
+
         }
 
         user0Repository.save(user0);

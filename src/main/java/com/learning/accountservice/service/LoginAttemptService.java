@@ -7,6 +7,7 @@ import com.learning.accountservice.repository.User0Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,9 @@ public class LoginAttemptService {
 
     @Autowired
     LogService logService;
+
+    @Autowired
+    HttpServletRequest request;
 
     public LoginAttemptService() {
     }
@@ -36,19 +40,37 @@ public class LoginAttemptService {
 
                 if (attempts > MAX_LOGIN_ATTEMPTS) {
                     user0.setAccountNonLocked(false);
-                    logService.log(EventMsg.BRUTE_FORCE.getMessage(), "", "", "");
-                    logService.log(EventMsg.LOCK_USER.getMessage(), "", "", "");
+
+                    logService.log(EventMsg.BRUTE_FORCE.name(),
+                            username,
+                            request.getServletPath(),
+                            request.getServletPath());
+
+                    logService.log(EventMsg.LOCK_USER.name(),
+                            username,
+                            "Lock user " + username,
+                            request.getServletPath());
+
                     return;
+
                 }
 
-                logService.log(EventMsg.LOGIN_FAILED.getMessage(), "", "", "");
+                logService.log(EventMsg.LOGIN_FAILED.name(),
+                        username,
+                        request.getServletPath(),
+                        request.getServletPath());
             }
 
             user0.setFailedLoginAttempts(attempts);
             user0Repository.save(user0);
 
         } else {
-            logService.log(EventMsg.LOGIN_FAILED.getMessage(), "", "", "");
+
+            logService.log(EventMsg.LOGIN_FAILED.name(),
+                    username,
+                    request.getServletPath(),
+                    request.getServletPath());
+
         }
 
     }
