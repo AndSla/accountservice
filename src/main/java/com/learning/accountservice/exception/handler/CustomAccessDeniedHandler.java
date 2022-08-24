@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.learning.accountservice.model.enums.EventMsg;
 import com.learning.accountservice.model.response.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.learning.accountservice.service.LogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -17,7 +17,8 @@ import java.io.IOException;
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
+    @Autowired
+    LogService logService;
 
     @Override
     public void handle(HttpServletRequest request,
@@ -27,7 +28,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         HttpStatus httpStatus = HttpStatus.FORBIDDEN;
         String message = "Access Denied!";
 
-        logger.info(EventMsg.ACCESS_DENIED.getMessage());
+        logService.log(EventMsg.ACCESS_DENIED.getMessage(), "", "", "");
 
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setStatus(httpStatus.value());

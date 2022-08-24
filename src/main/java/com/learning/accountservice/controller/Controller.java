@@ -2,18 +2,16 @@ package com.learning.accountservice.controller;
 
 import com.learning.accountservice.exception.*;
 import com.learning.accountservice.model.*;
+import com.learning.accountservice.model.enums.EventMsg;
 import com.learning.accountservice.model.enums.Operation;
 import com.learning.accountservice.model.enums.Role;
-import com.learning.accountservice.model.enums.EventMsg;
 import com.learning.accountservice.model.response.*;
-import com.learning.accountservice.repository.LogEventRepository;
 import com.learning.accountservice.repository.SalaryRepository;
 import com.learning.accountservice.repository.User0Repository;
+import com.learning.accountservice.service.LogService;
 import com.learning.accountservice.utils.SortByPeriod;
 import com.learning.accountservice.utils.Utils;
 import com.learning.accountservice.utils.ValidList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -31,8 +29,6 @@ import java.util.Optional;
 @RestController
 public class Controller {
 
-    private final Logger logger = LoggerFactory.getLogger(Controller.class);
-
     Utils utils = new Utils();
 
     @Autowired
@@ -42,10 +38,10 @@ public class Controller {
     SalaryRepository salaryRepository;
 
     @Autowired
-    LogEventRepository logEventRepository;
+    PasswordEncoder encoder;
 
     @Autowired
-    PasswordEncoder encoder;
+    LogService logService;
 
     @PostMapping("api/auth/signup")
     public User0 signUp(@Valid @RequestBody User0 user0, HttpServletRequest request) {
@@ -70,13 +66,11 @@ public class Controller {
         }
         user0Repository.save(newUser0);
 
-        LogEvent logEvent = new LogEvent();
-        logEvent.setAction(EventMsg.CREATE_USER.getMessage());
-        logEvent.setSubject("Anonymous");
-        logEvent.setObject(newUser0.getUsername());
-        logEvent.setPath(request.getServletPath());
-        logEventRepository.save(logEvent);
-        logger.info(EventMsg.CREATE_USER.getMessage());
+        logService.log(EventMsg.CREATE_USER.getMessage(),
+                "Anonymous",
+                newUser0.getUsername(),
+                request.getServletPath());
+
         return newUser0;
 
     }
@@ -157,7 +151,8 @@ public class Controller {
 
                 user0.setPassword(encoder.encode(newPassword));
                 user0Repository.save(user0);
-                logger.info(EventMsg.CHANGE_PASSWORD.getMessage());
+                //todo
+                //logger.info(EventMsg.CHANGE_PASSWORD.getMessage());
                 changePassResponse.setEmail(user0.getUsername());
                 changePassResponse.setStatus("The password has been updated successfully");
             } else {
@@ -267,7 +262,8 @@ public class Controller {
                 }
                 if (!user0.getRoles().contains(role)) {
                     user0.grantRole(role);
-                    logger.info(EventMsg.GRANT_ROLE.getMessage());
+                    //todo
+                    //logger.info(EventMsg.GRANT_ROLE.getMessage());
                 }
                 break;
             case REMOVE:
@@ -281,7 +277,8 @@ public class Controller {
                     }
 
                     user0.removeRole(role);
-                    logger.info(EventMsg.REMOVE_ROLE.getMessage());
+                    //todo
+                    //logger.info(EventMsg.REMOVE_ROLE.getMessage());
                     break;
                 } else {
                     throw new NoSuchRoleException();
@@ -321,8 +318,8 @@ public class Controller {
         user0Repository.delete(user0);
         deleteUserResponse.setUser(user0.getUsername());
         deleteUserResponse.setStatus("Deleted successfully!");
-
-        logger.info(EventMsg.DELETE_USER.getMessage());
+        //todo
+        //logger.info(EventMsg.DELETE_USER.getMessage());
 
         return deleteUserResponse;
 
@@ -349,12 +346,14 @@ public class Controller {
                     throw new LockAdminAttemptException();
                 }
                 user0.setAccountNonLocked(false);
-                logger.info(EventMsg.LOCK_USER.getMessage());
+                //todo
+                //logger.info(EventMsg.LOCK_USER.getMessage());
                 break;
             case UNLOCK:
                 user0.setAccountNonLocked(true);
                 user0.setFailedLoginAttempts(0);
-                logger.info(EventMsg.UNLOCK_USER.getMessage());
+                //todo
+                //logger.info(EventMsg.UNLOCK_USER.getMessage());
         }
 
         user0Repository.save(user0);
@@ -365,7 +364,7 @@ public class Controller {
 
     @GetMapping("api/security/events")
     public List<LogEvent> getLog() {
-        return logEventRepository.findAll();
+        return logService.getLogEventRepository().findAll();
     }
 
 }
