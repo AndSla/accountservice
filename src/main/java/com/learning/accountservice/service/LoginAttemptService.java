@@ -45,6 +45,7 @@ public class LoginAttemptService {
 
                 if (attempts >= MAX_LOGIN_ATTEMPTS) {
                     user0.setAccountNonLocked(false);
+                    user0Repository.save(user0);
 
                     logService.log(EventMsg.BRUTE_FORCE.name(),
                             username,
