@@ -38,7 +38,12 @@ public class LoginAttemptService {
                 attempts = user0.getFailedLoginAttempts();
                 attempts++;
 
-                if (attempts > MAX_LOGIN_ATTEMPTS) {
+                logService.log(EventMsg.LOGIN_FAILED.name(),
+                        username,
+                        request.getServletPath(),
+                        request.getServletPath());
+
+                if (attempts >= MAX_LOGIN_ATTEMPTS) {
                     user0.setAccountNonLocked(false);
 
                     logService.log(EventMsg.BRUTE_FORCE.name(),
@@ -55,10 +60,6 @@ public class LoginAttemptService {
 
                 }
 
-                logService.log(EventMsg.LOGIN_FAILED.name(),
-                        username,
-                        request.getServletPath(),
-                        request.getServletPath());
             }
 
             user0.setFailedLoginAttempts(attempts);
@@ -76,3 +77,4 @@ public class LoginAttemptService {
     }
 
 }
+
