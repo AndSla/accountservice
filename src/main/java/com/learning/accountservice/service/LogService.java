@@ -1,10 +1,8 @@
 package com.learning.accountservice.service;
 
 import com.learning.accountservice.model.LogEvent;
-import com.learning.accountservice.model.enums.EventMsg;
 import com.learning.accountservice.repository.LogEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 
 @Service
