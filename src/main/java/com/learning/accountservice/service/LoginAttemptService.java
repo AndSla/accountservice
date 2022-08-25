@@ -3,6 +3,7 @@ package com.learning.accountservice.service;
 import com.learning.accountservice.model.User0;
 import com.learning.accountservice.model.enums.EventMsg;
 import com.learning.accountservice.model.enums.LoginAttempt;
+import com.learning.accountservice.model.enums.Role;
 import com.learning.accountservice.repository.User0Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,15 @@ public class LoginAttemptService {
 
     public void updateLoginAttempts(String username, LoginAttempt loginAttempt) {
 
-        Optional<User0> user0Optional = user0Repository.findByUsername(username);
+        Optional<User0> user0Optional = user0Repository.findByUsernameIgnoreCase(username);
         int attempts = 0;
 
         if (user0Optional.isPresent()) {
             User0 user0 = user0Optional.get();
+
+            if (user0.getRoles().contains(Role.ROLE_ADMINISTRATOR)) {
+                return;
+            }
 
             if (loginAttempt == LoginAttempt.FAILURE) {
                 attempts = user0.getFailedLoginAttempts();

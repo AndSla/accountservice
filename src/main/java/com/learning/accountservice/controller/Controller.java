@@ -50,7 +50,7 @@ public class Controller {
             throw new BreachedPasswordException();
         }
 
-        if (user0Repository.existsByUsername(user0.getUsername().toLowerCase())) {
+        if (user0Repository.existsByUsernameIgnoreCase(user0.getUsername())) {
             throw new UserExistsException();
         }
 
@@ -78,7 +78,7 @@ public class Controller {
     @GetMapping("api/empl/payment")
     public Object getPaymentInfo(Authentication auth, @RequestParam(required = false) String period) {
 
-        Optional<User0> user0Optional = user0Repository.findByUsername(auth.getName());
+        Optional<User0> user0Optional = user0Repository.findByUsernameIgnoreCase(auth.getName());
         User0 user0;
 
         if (user0Optional.isPresent()) {
@@ -135,7 +135,7 @@ public class Controller {
         ChangePassResponse changePassResponse = new ChangePassResponse();
 
         if (auth != null) {
-            Optional<User0> user0Optional = user0Repository.findByUsername(auth.getName());
+            Optional<User0> user0Optional = user0Repository.findByUsernameIgnoreCase(auth.getName());
 
             if (user0Optional.isPresent()) {
                 User0 user0 = user0Optional.get();
@@ -183,7 +183,7 @@ public class Controller {
 
             if (!salaryRepository.existsByEmployeeAndPeriod(employee, period)) {
 
-                Optional<User0> user0Optional = user0Repository.findByUsername(employee);
+                Optional<User0> user0Optional = user0Repository.findByUsernameIgnoreCase(employee);
                 User0 user0;
 
                 if (user0Optional.isPresent()) {
@@ -245,11 +245,11 @@ public class Controller {
     public User0 setRoles(@RequestBody SetRole setRole,
                           HttpServletRequest request) {
 
-        String username = setRole.getUser().toLowerCase();
+        String username = setRole.getUser();
         Role role = setRole.getRole();
         Operation operation = setRole.getOperation();
 
-        Optional<User0> user0Optional = user0Repository.findByUsername(username);
+        Optional<User0> user0Optional = user0Repository.findByUsernameIgnoreCase(username);
         User0 user0;
 
         if (user0Optional.isPresent()) {
@@ -316,7 +316,7 @@ public class Controller {
 
         DeleteUserResponse deleteUserResponse = new DeleteUserResponse();
 
-        Optional<User0> user0Optional = user0Repository.findByUsername(user);
+        Optional<User0> user0Optional = user0Repository.findByUsernameIgnoreCase(user);
         User0 user0;
 
         if (user0Optional.isPresent()) {
@@ -349,11 +349,12 @@ public class Controller {
         String username = setAccess.getUser();
         Operation operation = setAccess.getOperation();
 
-        Optional<User0> user0Optional = user0Repository.findByUsername(username);
+        Optional<User0> user0Optional = user0Repository.findByUsernameIgnoreCase(username);
         User0 user0;
 
         if (user0Optional.isPresent()) {
             user0 = user0Optional.get();
+            username = user0.getUsername();
         } else {
             throw new UserNotFoundException(HttpStatus.NOT_FOUND);
         }
