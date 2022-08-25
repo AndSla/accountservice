@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         String message;
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
 
-        if (authException instanceof LockedException) {
+        if (authException instanceof LockedException) {         // If user is locked - change response message
             message = "User account is locked";
         } else {
             message = httpStatus.getReasonPhrase();
